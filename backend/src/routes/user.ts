@@ -2,22 +2,49 @@ import express from "express";
 import userModel from "../server";
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config";
-import mongoose from "mongoose";
+import z from "zod"
 
 const userRouter = express.Router();
 
+const User = z.object({
+    username : z.string().max(8),
+    password : z.string().min(6)
+})
+
 userRouter.post("/signup", async (req, res)=> {
+    const {success} = User.safeParse(req.body);
+    
+    if (!success) {
+        res.status(411).json({
+            message: "Email already taken / Incorrect inputs"
+        })
+        return;
+    }
+    const existingUser = await userModel.findOne({
+        username: req.body.username
+    })
+    if (existingUser) {
+         res.status(411).json({
+            message: "Email already taken/Incorrect inputs"
+        })
+        return
+    }
     const username = req.body.username;
     const password = req.body.password;
 
-    await userModel.create({
+    const user = await userModel.create({
         username,
         password
     })
-    
+    const userId = user._id
+    const token = jwt.sign({
+        userId
+    }, JWT_SECRET)
     res.json({
-        message : "You are signed up"
+        message : "You are signed up",
+        token
     })
+    
 })
 
 userRouter.post("/signin", async (req, res)=> {
@@ -27,10 +54,10 @@ userRouter.post("/signin", async (req, res)=> {
         username : username,
         password : password
     })
-    console.log(user)
+    const userId = user?._id
     if (user) {
         const token = jwt.sign({
-            id : user._id
+            userId
         }, JWT_SECRET)
         res.json({
             message : "You are signed in",
@@ -54,10 +81,12 @@ userRouter.put("/update/:id", async (req, res) => {
         message : "You are updated"
        })
     } catch (error) {
-        //@ts-ignore
+        if (error && typeof error === "object" && "message" in error){
         res.status(400).json({ message: error.message });
+        }
+        return;
     }
 
-})
+}) 
 
 export default userRouter

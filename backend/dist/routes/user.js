@@ -16,8 +16,21 @@ const express_1 = __importDefault(require("express"));
 const server_1 = __importDefault(require("../server"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
+const zod_1 = __importDefault(require("zod"));
 const userRouter = express_1.default.Router();
+const User = zod_1.default.object({
+    username: zod_1.default.string().max(5),
+    password: zod_1.default.string()
+});
 userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { success } = User.safeParse(req.body);
+    if (!success) {
+        res.status(411).json({
+            message: "Email already taken / Incorrect inputs"
+        });
+        return;
+    }
+    console.log("hiii");
     const username = req.body.username;
     const password = req.body.password;
     yield server_1.default.create({
@@ -56,7 +69,9 @@ userRouter.put("/update/:id", (req, res) => __awaiter(void 0, void 0, void 0, fu
     const { id } = req.params;
     try {
         const result = yield server_1.default.findByIdAndUpdate(id, updated);
-        res.send(result);
+        res.json({
+            message: "You are updated"
+        });
     }
     catch (error) {
         //@ts-ignore
