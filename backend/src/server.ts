@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { Schema } from "mongoose";
+import { number } from "zod";
 
 
 
@@ -12,7 +13,24 @@ const userSchema = new Schema({
     firstName : String,
     lastName : String
 })
+const accountSchema = new Schema({
+    userId : {
+        amount : mongoose.Types.ObjectId,
+        ref : "usersTables",
+        required : true
+    },
+    balance : {
+        type : Number,
+        required : true
+    }
 
+})
+const accountModel = mongoose.model("accountTable", accountSchema)
 const userModel = mongoose.model("usersTables", userSchema);
 
-export default userModel
+const models = {
+    accountModel,
+    userModel
+}
+
+export default models

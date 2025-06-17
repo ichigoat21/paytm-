@@ -1,11 +1,11 @@
 import express from "express";
-import userModel from "../server";
+import models from "../server";
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config";
 import z from "zod"
 
 const userRouter = express.Router();
-
+const {userModel, accountModel} = models
 const User = z.object({
     username : z.string().max(8),
     password : z.string().min(6)
@@ -37,6 +37,11 @@ userRouter.post("/signup", async (req, res)=> {
         password
     })
     const userId = user._id
+    
+    await accountModel.create({
+        userId,
+        balance: 1 + Math.random() * 10000
+    })
     const token = jwt.sign({
         userId
     }, JWT_SECRET)
