@@ -6,12 +6,12 @@ import mongoose from "mongoose";
 const accountRouter = express.Router();
 
 const {accountModel} = models
-accountRouter.get("/account", async (req , res )=> {
+accountRouter.get("/balance", async (req , res )=> {
     const user = await accountModel.findOne({
         userId : (req as CustomRequest).userId
     })
 
-    res.status(400).json({
+    res.status(200).json({
         balance : user?.balance
     })
 

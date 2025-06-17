@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 import { Schema } from "mongoose";
-import { number } from "zod";
 
 
 
@@ -15,7 +14,7 @@ const userSchema = new Schema({
 })
 const accountSchema = new Schema({
     userId : {
-        amount : mongoose.Types.ObjectId,
+        type : mongoose.Types.ObjectId,
         ref : "usersTables",
         required : true
     },

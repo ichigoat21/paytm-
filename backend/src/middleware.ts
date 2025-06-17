@@ -5,25 +5,25 @@ import { JWT_SECRET } from "./config";
 export interface CustomRequest extends Request {
     userId : string
 }
+interface JwtPayload {
+    userId: string;
+}
 
-export const authMiddleware = (req : CustomRequest, res : Response, next : NextFunction) => {
+ const authMiddleware = (req : Request, res : Response, next : NextFunction) => {
     const authHeader = req.headers['authorization'];
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(403).json({
-            message : "Invalid"
-        });
+    if (!authHeader ){
+        return;
     }
     const token = authHeader.split(' ')[1];
     try {
-        const decoded = jwt.verify(token, JWT_SECRET)
-        if (typeof decoded === "string") {
-            return;
-        }
-        req.userId = decoded.userId
+        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload
+        const customReq = req as CustomRequest;
+        customReq.userId = decoded.userId
         next()
     } catch (error) {
         res.status(403).json({
-            "message" : "you are not logged in"
+            //@ts-ignore
+            "message" : error.message
     })}
 }
+export default authMiddleware
