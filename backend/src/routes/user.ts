@@ -7,7 +7,7 @@ import z from "zod"
 const userRouter = express.Router();
 const {userModel, accountModel} = models
 const User = z.object({
-    username : z.string().max(8),
+    username : z.string(),
     password : z.string().min(6)
 })
 

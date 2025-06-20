@@ -20,7 +20,7 @@ const zod_1 = __importDefault(require("zod"));
 const userRouter = express_1.default.Router();
 const { userModel, accountModel } = server_1.default;
 const User = zod_1.default.object({
-    username: zod_1.default.string().max(8),
+    username: zod_1.default.string(),
     password: zod_1.default.string().min(6)
 });
 userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

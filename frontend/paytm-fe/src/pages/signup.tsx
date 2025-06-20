@@ -1,8 +1,33 @@
+import { useRef } from "react";
 import { Button } from "../components/button";
 import { InputBox } from "../components/input";
+import axios from "axios";
+import { backend_URL } from "../config/backend";
+import { useNavigate } from "react-router-dom";
 
 
 export const Signup = () => {
+  const userRef = useRef<HTMLInputElement>(null)
+  const passRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
+
+  async function getUserInputs(){
+    const username = userRef.current?.value;
+    const password = passRef.current?.value;
+
+    const response = await axios.post(`${backend_URL}/users/signup`, {
+      username : username,
+      password : password
+    });
+    const token = response.data.token;
+    window.localStorage.setItem("token", token);
+    navigate("/dashboard")
+  }
+  function naviSignup(){
+    const navigate = useNavigate();
+    navigate("/signin")
+  }
+
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
@@ -12,15 +37,15 @@ export const Signup = () => {
         </div>
 
         <div className="space-y-4 flex flex-col justify-center">
-          <InputBox placeholder="John Doe" text="Username" />
-          <InputBox placeholder="********" text="Password" />
+          <InputBox reference={userRef} placeholder="John Doe" text="Username" />
+          <InputBox reference={passRef} placeholder="********" text="Password" />
           <div className="flex justify-center items-center mt-4">
-          <Button text="Sign Up" />
+          <Button onClick={getUserInputs} text="Sign Up" />
           </div>
         </div>
  
         <div className="mt-4 text-sm text-center text-gray-700">
-          Already have an account? Login
+          Already have an account? <span onClick={naviSignup} className="cursor-pointer">Signup</span>
         </div>
       </div>
     </div>
