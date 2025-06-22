@@ -6,10 +6,11 @@ import { backend_URL } from "../config/backend";
 import { useNavigate } from "react-router-dom";
 
 
-export const Signup = () => {
+export const Signin = () => {
   const userRef = useRef<HTMLInputElement>(null)
   const passRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+  const relink = useNavigate();
 
   async function getUserInputs(){
     const username = userRef.current?.value;
@@ -20,13 +21,13 @@ export const Signup = () => {
       password : password
     });
     const token = response.data.token;
-    window.localStorage.getItem(token);
+    window.localStorage.setItem("token", token);
     navigate("/dashboard")
   }
   function naviSignup(){
-    const navigate = useNavigate();
-    navigate("/signup")
+    relink("/signup")
   }
+
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">

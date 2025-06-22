@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react";
 import { Card } from "../components/card";
 import { InputBox } from "../components/input"
+import axios from "axios";
+import { backend_URL } from "../config/backend";
 
 export const Dashboard = () => {
+  const [users, setUsers] = useState()
+  useEffect(()=>{
+    async function fetchusers() {
+      const response = await axios.get(`${backend_URL}/users/bulk`);
+      setUsers(response.data.user)
+    }
+    fetchusers()
+  }, [])
+  if (!users) return;
   return (
     <div className="flex flex-col justify-start items-center min-h-screen p-4 bg-gray-50">
       {/* Header */}
@@ -30,9 +42,10 @@ export const Dashboard = () => {
         <InputBox text="Search users..." placeholder="Search users..." />
       </div>
       <div className="w-full max-w-4xl">
-        <Card text="User 1"></Card>
-        <Card text="User 2"></Card>
-        <Card text="User 3"></Card>
+        {users.map((user)=> (
+          <Card key={user._id} text={user.username}/>
+        ))
+        }
       </div>
     </div>
   );

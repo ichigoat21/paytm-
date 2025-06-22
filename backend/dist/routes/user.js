@@ -98,4 +98,23 @@ userRouter.put("/update/:id", (req, res) => __awaiter(void 0, void 0, void 0, fu
         return;
     }
 }));
+userRouter.get("/bulk", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filter = req.query.filter || "";
+    const users = yield userModel.find({
+        $or: [{
+                username: {
+                    "$regex": filter
+                }
+            }]
+    });
+    console.log(users);
+    res.json({
+        user: users.map(user => ({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id
+        }))
+    });
+}));
 exports.default = userRouter;

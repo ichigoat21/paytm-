@@ -10,6 +10,7 @@ export const Signup = () => {
   const userRef = useRef<HTMLInputElement>(null)
   const passRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+  const relink = useNavigate();
 
   async function getUserInputs(){
     const username = userRef.current?.value;
@@ -24,8 +25,7 @@ export const Signup = () => {
     navigate("/dashboard")
   }
   function naviSignup(){
-    const navigate = useNavigate();
-    navigate("/signin")
+    relink("/signin")
   }
 
   return (
@@ -45,7 +45,7 @@ export const Signup = () => {
         </div>
  
         <div className="mt-4 text-sm text-center text-gray-700">
-          Already have an account? <span onClick={naviSignup} className="cursor-pointer">Signup</span>
+          Already have an account? <span onClick={naviSignup} className="cursor-pointer">Signin</span>
         </div>
       </div>
     </div>
