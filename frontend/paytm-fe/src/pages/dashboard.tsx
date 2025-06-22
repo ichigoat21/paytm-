@@ -6,13 +6,14 @@ import { backend_URL } from "../config/backend";
 
 export const Dashboard = () => {
   const [users, setUsers] = useState()
+  const [filter, setFilter] = useState("")
   useEffect(()=>{
     async function fetchusers() {
-      const response = await axios.get(`${backend_URL}/users/bulk`);
+      const response = await axios.get(`${backend_URL}/users/bulk?filter=${filter}`);
       setUsers(response.data.user)
     }
     fetchusers()
-  }, [])
+  }, [filter])
   if (!users) return;
   return (
     <div className="flex flex-col justify-start items-center min-h-screen p-4 bg-gray-50">
@@ -39,7 +40,9 @@ export const Dashboard = () => {
 
       {/* Search input */}
       <div className="w-full max-w-4xl">
-        <InputBox text="Search users..." placeholder="Search users..." />
+        <InputBox value={filter} onchange={(e)=> {
+          setFilter(e.target.value)
+        }} text="Search users..." placeholder="Search users..." />
       </div>
       <div className="w-full max-w-4xl">
         {users.map((user)=> (
