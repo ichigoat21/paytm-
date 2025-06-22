@@ -7,13 +7,14 @@ import { backend_URL } from "../config/backend";
 export const Dashboard = () => {
   const [users, setUsers] = useState()
   const [filter, setFilter] = useState("")
-  useEffect(()=>{
-    async function fetchusers() {
+  useEffect(() => {
+    const timeout = setTimeout(async () => {
       const response = await axios.get(`${backend_URL}/users/bulk?filter=${filter}`);
-      setUsers(response.data.user)
-    }
-    fetchusers()
-  }, [filter])
+      setUsers(response.data.user);
+    }, 300);
+  
+    return () => clearTimeout(timeout); 
+  }, [filter]);
   if (!users) return;
   return (
     <div className="flex flex-col justify-start items-center min-h-screen p-4 bg-gray-50">
