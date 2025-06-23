@@ -2,9 +2,10 @@ import { Button } from "./button"
 
 interface CardProps {
   text: string;
+  onclick : ()=> void
 }
 
-export const Card = ({ text }: CardProps) => {
+export const Card = ({ text, onclick }: CardProps) => {
   return (
     <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md my-2">
       {/* User Info */}
@@ -16,7 +17,7 @@ export const Card = ({ text }: CardProps) => {
       </div>
 
       {/* Action Button */}
-      <Button text="Send Money" />
+      <Button onClick={onclick} text="Send Money" />
     </div>
   );
 };

@@ -3,10 +3,12 @@ import { Card } from "../components/card";
 import { InputBox } from "../components/input"
 import axios from "axios";
 import { backend_URL } from "../config/backend";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
   const [users, setUsers] = useState()
   const [filter, setFilter] = useState("")
+  const navigate = useNavigate()
   useEffect(() => {
     const timeout = setTimeout(async () => {
       const response = await axios.get(`${backend_URL}/users/bulk?filter=${filter}`);
@@ -47,7 +49,9 @@ export const Dashboard = () => {
       </div>
       <div className="w-full max-w-4xl">
         {users.map((user)=> (
-          <Card key={user._id} text={user.username}/>
+          <Card onclick={()=> {
+               navigate("/send?id=" + user._id + "&name=" + user.username)
+          }} key={user._id} text={user.username}/>
         ))
         }
       </div>
